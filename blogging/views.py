@@ -33,7 +33,7 @@ class LatestPostsFeed(Feed):
     description = "Latest posts published on the blog"
 
     def items(self):
-        return Post.objects.order_by('-published_date')[:5]
+        return Post.objects.order_by("-published_date")[:5]
 
     def item_title(self, item):
         return item.title
@@ -42,7 +42,7 @@ class LatestPostsFeed(Feed):
         return item.text
 
     def item_link(self, item):
-        return reverse('blog_detail', args=[item.pk])
+        return reverse("blog_detail", args=[item.pk])
 
 
 # def detail_view(request, post_id):
