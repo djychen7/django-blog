@@ -3,6 +3,8 @@
 # from django.template import loader
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
+from django.contrib.syndication.views import Feed
+from django.urls import reverse
 from blogging.models import Post
 
 
@@ -23,6 +25,24 @@ class BlogListView(ListView):
 class BlogDetailView(DetailView):
     queryset = Post.objects.exclude(published_date__exact=None)
     template_name = "blogging/detail.html"
+
+
+class LatestPostsFeed(Feed):
+    title = "Recent blogging posts"
+    link = "/posts/"
+    description = "Latest posts published on the blog"
+
+    def items(self):
+        return Post.objects.order_by('-published_date')[:5]
+
+    def item_title(self, item):
+        return item.title
+
+    def item_description(self, item):
+        return item.text
+
+    def item_link(self, item):
+        return reverse('blog_detail', args=[item.pk])
 
 
 # def detail_view(request, post_id):
